@@ -1,2 +1,2 @@
 ﻿  Hello, CPP!.cpp
-  Hello, CPP!.vcxproj -> D:\WorkSpace\works\cpp\Hello, CPP!\Debug\Hello, CPP!.exe
+d:\workspace\works\cpp\hello, cpp!\hello, cpp!\hello, cpp!.cpp(13): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
