@@ -1,3 +1,7 @@
+/*
+ * Question source : Code Jam Kickstart - 2018 Round E - A
+ */
+
 package xhq.yogurt;
 
 import java.util.*;

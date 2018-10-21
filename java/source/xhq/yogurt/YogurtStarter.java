@@ -1,3 +1,7 @@
+/*
+ * Question source : Code Jam Kickstart - 2018 Round E - A
+ */
+
 package xhq.yogurt;
 
 import java.io.*;
@@ -13,8 +17,8 @@ class YogurtStarter
 	YogurtWriter yr;
 
 	public YogurtStarter() throws Exception {
-		sc = new Scanner(new File(this.getClass().getResource("A-large-practice.in.txt").getPath()));
-		yr = new YogurtWriter(new File(this.getClass().getResource("").getPath() + "large-output.txt"));
+		sc = new Scanner(new File(this.getClass().getResource("A-small-practice.in.txt").getPath()));
+		yr = new YogurtWriter(new File(this.getClass().getResource("").getPath() + "small-output.txt"));
 	}
 
 	public static void main(String[] args) 
