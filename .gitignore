@@ -259,7 +259,16 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+*.pydevproject
 
 #JAVA
 classes/
 *.class
+
+#C++
+*.o
+
+#vscode
+launch.json
+tasks.json
+*.rar
