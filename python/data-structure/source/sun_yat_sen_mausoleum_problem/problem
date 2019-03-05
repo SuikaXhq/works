@@ -1,0 +1,14 @@
+Problem Description
+Sun Yat-sen’s Mausoleum is situated at the foot of the second peak of Mount Zijin (Purple Mountain) in Nanjing. 
+Tourists can enjoy the beautiful skyline of Nanjing by 392 stairs leading to the vault, as shown in Figure 1. 
+Now, assume you can climb 1, 2, or 3 stairs at a time. 
+How many different ways can you reach exactly to the vault?
+
+For instance,if there is only 10 stairs to the vault, 
+one possible climbing way is “3–>3–>3–>1”, 
+another way is “2–>2–>2–>1–>1–>1–>1”. 
+You should write the following four programs (they are all required): 
+• A simple recursive version, maybe it does not work for the 392 stairs but is OK for small numbers, e.g., 5 or 10. 
+• An improved recursive version with O(n) time complexity and will output the final correct answer. 
+• A bottom-up version with memoization at O(n) time complexity. 
+• A final fast version without memoization at O(n) time complexity.
