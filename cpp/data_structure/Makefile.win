@@ -4,8 +4,8 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = sorts/bubble_sort.o
-LINKOBJ  = sorts/bubble_sort.o
+OBJ      = sun_yat_sen/BigInt.o sun_yat_sen/tester.o
+LINKOBJ  = sun_yat_sen/BigInt.o sun_yat_sen/tester.o
 LIBS     = -L"D:/Dev-Cpp/MinGW64/lib" -L"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
 INCS     = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"D:/Dev-Cpp/MinGW64/include" -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -24,5 +24,8 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-sorts/bubble_sort.o: sorts/bubble_sort.cpp
-	$(CPP) -c sorts/bubble_sort.cpp -o sorts/bubble_sort.o $(CXXFLAGS)
+sun_yat_sen/BigInt.o: sun_yat_sen/BigInt.cpp
+	$(CPP) -c sun_yat_sen/BigInt.cpp -o sun_yat_sen/BigInt.o $(CXXFLAGS)
+
+sun_yat_sen/tester.o: sun_yat_sen/tester.cpp
+	$(CPP) -c sun_yat_sen/tester.cpp -o sun_yat_sen/tester.o $(CXXFLAGS)

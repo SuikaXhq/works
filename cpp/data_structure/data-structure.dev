@@ -24,12 +24,12 @@ HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
 CommandLine=
-Folders=sorts
+Folders=sorts,sun_yat_sen
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000001000000
-UnitCount=2
+UnitCount=4
 
 [VersionInfo]
 Major=1
@@ -51,6 +51,16 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit2]
+FileName=sun_yat_sen\BigInt.h
+CompileCpp=1
+Folder=sun_yat_sen
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit1]
 FileName=sorts\bubble_sort.h
 CompileCpp=1
 Folder=sorts
@@ -60,10 +70,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit1]
-FileName=sorts\bubble_sort.cpp
+[Unit3]
+FileName=sun_yat_sen\BigInt.cpp
 CompileCpp=1
-Folder=sorts
+Folder=sun_yat_sen
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=sun_yat_sen\tester.cpp
+CompileCpp=1
+Folder=sun_yat_sen
 Compile=1
 Link=1
 Priority=1000
