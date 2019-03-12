@@ -267,6 +267,10 @@ classes/
 
 #C++
 *.o
+*.exe
+*.dev
+*.layout
+*.win
 
 #vscode
 launch.json
