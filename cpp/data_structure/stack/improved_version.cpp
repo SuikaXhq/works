@@ -30,9 +30,7 @@ string parseToPostfix(const string& infix) {
 	int size = infix.size();
 	
 	for (int i = 0; i < size; ++i) {
-		
 		if (infix[i] == ' ')continue;
-		
 		if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.') {
 			postfix.append(1,infix[i]);
 			if (i+1 >= size || infix[i+1] == ' ' || isSymbol(infix[i+1])) {
@@ -41,39 +39,34 @@ string parseToPostfix(const string& infix) {
 			continue;
 		}
 		
-		if (isSymbol(infix[i])) {
-				
-			if (priority(infix[i]) > 0) {   //+ - * / ( {
-			
-				while (!s.empty() && priority(s.top()) != LBRACKET && priority(infix[i]) <= priority(s.top())) {
-					postfix.append(1, s.top());
-					postfix.append(1,' ');
-					s.pop();
-				}
-				s.push(infix[i]);
-				
-			} else {    //处理右括号情况
-			
-				while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
-					postfix.append(1, s.top());
-					postfix.append(1,' ');
-					s.pop();
-				}
-				if (s.empty() || isMatch(s.top(), infix[i]) == -1) {
-					bracketError(i+1);
-					break;
-				}
-				s.pop();    //pop掉左括号
-				
+		if (priority(infix[i]) == 0) {	//非法字符 
+			cout << "Illegal character at " << i+1 << "." << endl; 
+			break;
+		}
+		
+		if (priority(infix[i]) > 0) {   //+ - * / ( {
+		
+			while (!s.empty() && priority(s.top()) != LBRACKET && priority(infix[i]) <= priority(s.top())) {
+				postfix.append(1, s.top());
+				postfix.append(1,' ');
+				s.pop();
 			}
+			s.push(infix[i]);
 			
-			continue;
-		}   //End isSymbol
+		} else {    //处理右括号情况
 		
-		//非法字符
-		cout << "Illegal character at " << i << "." << endl;
-		break;
-		
+			while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
+				postfix.append(1, s.top());
+				postfix.append(1,' ');
+				s.pop();
+			}
+			if (s.empty() || isMatch(s.top(), infix[i]) == -1) {
+				bracketError(i+1);
+				break;
+			}
+			s.pop();    //pop掉左括号
+			
+		}
 	}   //End for
 	
 	while (!s.empty()) {
@@ -163,6 +156,7 @@ double evaluateInfix(const string& infix) {
 	stack<double> ns;   //number stack
 	stack<char> os; //operator stack
 	int size = infix.size();
+	char preItem = '';	//previous item('' = head of expression, '0' = number) 
 	
 	for (int i = 0; i < size; ++i) {
 		
@@ -200,37 +194,36 @@ double evaluateInfix(const string& infix) {
 
 		}
 		
-		if (isSymbol(infix[i])) {
+		if (priority(infix[i]) == 0) {	//非法字符 
+			cout << "Illegal character at " << i+1 << "." << endl; 
+			break;
+		}
+		
+		if (priority(infix[i]) > 0) {   //+ - * / ( {
 
-			if (priority(infix[i]) > 0) {   //+ - * / ( {
-
-				while (!os.empty() && priority(os.top()) != LBRACKET && priority(infix[i]) <= priority(os.top())) {
-					operate(ns, os.top());
-					os.pop();
-				}
-				os.push(infix[i]);
-
-			} else {    //处理右括号情况
-
-				while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
-					postfix.append(1, s.top());
-					postfix.append(1,' ');
-					s.pop();
-				}
-				if (s.empty() || isMatch(s.top(), infix[i]) == -1) {
-					bracketError(i+1);
-					break;
-				}
-				s.pop();    //pop掉左括号
-
+			while (!os.empty() && priority(os.top()) != LBRACKET && priority(infix[i]) <= priority(os.top())) {
+				operate(ns, os.top());
+				os.pop();
 			}
+			os.push(infix[i]);
 
-			continue;
-		}   //End isSymbol
+		} else {    //处理右括号情况
+
+			while (!os.empty() && isMatch(os.top(), infix[i]) == 1) {
+				operate(ns, os.top());
+				os.pop();
+			}
+			if (os.empty() || isMatch(os.top(), infix[i]) == -1) {
+				bracketError(i+1);
+				break;
+			}
+			os.pop();    //pop掉左括号
+
+		}
 	}
 	
 	while (!os.empty()) {
-		operate(ns, op.top());
+		operate(ns, os.top());
 		os.pop();
 	}
 	
@@ -271,8 +264,17 @@ double getResult(double n1, double n2, char op) {
 }
 
 void operate(stack<double>& s, char op) {
+	if (s.empty()) {
+		cout << "Illegal operator." << endl;
+		return;
+	} 
 	double temp2 = s.top();
 	s.pop();
+	
+	if (s.empty()) {
+		cout << "Illegal operator." << endl;
+		return;
+	} 
 	double temp1 = s.top();
 	s.pop();
 	s.push(getResult(temp1, temp2, op));
@@ -295,6 +297,9 @@ short priority(char c) {
 
 	case '}':
 		return -2;
+		
+	default:
+		return 0;	//非法符号 
 	}
 }
 
