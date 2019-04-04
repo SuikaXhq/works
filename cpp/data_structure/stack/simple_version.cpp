@@ -1,3 +1,7 @@
+/**
+ *  Last modified: 2019/3/26
+ */
+
 #include <iostream>
 #include <stack>
 #include <cstdlib>
@@ -9,16 +13,27 @@ string parseToPostfix(const string&);  //Infix -> Postfix
 double parseToDouble(const string&);   //Postfix -> Double
 double evaluateInfix(const string&);    //Infix -> Double
 
-bool isSymbol(char);    //判断是否是操作符
 double getResult(double, double, char); //计算单个运算得到的答案
-short priority(char);   //操作符优先级
+short priority(char);   //操作符优先级, 0代表非符号
 short isMatch(char,char);    //判断括号是否匹配
 
 int main() {
-	string test = "6 - 6 * ( 1 + 6 ) / 2";
-	cout << parseToPostfix(test) << endl;
-	cout << parseToDouble(parseToPostfix(test)) << endl;
-	cout << evaluateInfix(test);
+	string test = "6 - 5 * ( 1 + 4 ) / 2";
+	cout << '>' << test << endl;
+	cout << "Postfix: " << parseToPostfix(test) << endl;
+	cout << "Postfix to answer: "<< parseToDouble(parseToPostfix(test)) << endl;
+	cout << "Infix to answer: " << evaluateInfix(test) << endl;
+	cout << endl;
+	
+	cout << "Type in an expression: " << endl;
+	while (cin) {
+		cout << '>';
+		getline(cin, test);
+		cout << "Postfix: " << parseToPostfix(test) << endl;
+		cout << "Postfix to answer: "<< parseToDouble(parseToPostfix(test)) << endl;
+		cout << "Infix to answer: " << evaluateInfix(test) << endl;
+		cout << endl;
+	}
 }
 
 string parseToPostfix(const string& infix) {
@@ -32,31 +47,28 @@ string parseToPostfix(const string& infix) {
 			postfix.append(1,' ');
 			continue;
 		}
-		if (isSymbol(infix[i])) {
+		
+		if (priority(infix[i]) == 0)continue;
+		
+		if (priority(infix[i]) > 0) {   //+ - * / ( {
 
-			if (priority(infix[i]) > 0) {   //+ - * / ( {
-
-				while (!s.empty() && priority(s.top()) != LBRACKET && priority(infix[i]) <= priority(s.top())) {
-					postfix.append(1, s.top());
-					postfix.append(1,' ');
-					s.pop();
-				}
-				s.push(infix[i]);
-
-			} else {    //处理右括号情况
-
-				while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
-					postfix.append(1, s.top());
-					postfix.append(1,' ');
-					s.pop();
-				}
-				s.pop();    //pop掉左括号
-
+			while (!s.empty() && priority(s.top()) != LBRACKET && priority(infix[i]) <= priority(s.top())) {
+				postfix.append(1, s.top());
+				postfix.append(1,' ');
+				s.pop();
 			}
+			s.push(infix[i]);
 
-			continue;
-		}   //End isSymbol
+		} else {    //处理右括号情况
 
+			while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
+				postfix.append(1, s.top());
+				postfix.append(1,' ');
+				s.pop();
+			}
+			s.pop();    //pop掉左括号
+
+		}
 	}   //End for
 
 	while (!s.empty()) {
@@ -77,7 +89,8 @@ double parseToDouble(const string& postfix) {
 			s.push(postfix[i] - '0');
 			continue;
 		}
-		if (isSymbol(postfix[i])) {	//postfix中没有括号，不用考虑
+		if (priority(postfix[i]) == 0)continue;
+		if (priority(postfix[i])) {	//postfix中没有括号，不用考虑
 			double temp2 = s.top();
 			s.pop();
 			double temp1 = s.top();
@@ -99,28 +112,27 @@ double evaluateInfix(const string& infix) {
 		if (infix[i] >= '0' && infix[i] <= '9') {
 			ns.push(infix[i] - '0');
 		}
-		if (isSymbol(infix[i])) {
-			if (priority(infix[i]) > 0) {   //+ - * / ( {
-				while (!os.empty() && priority(os.top()) != LBRACKET && priority(infix[i]) <= priority(os.top())) {
-					double temp2 = ns.top();
-					ns.pop();
-					double temp1 = ns.top();
-					ns.pop();
-					ns.push(getResult(temp1, temp2, os.top()));
-					os.pop();
-				}
-				os.push(infix[i]);
-			} else {    //处理右括号情况
-				while (!os.empty() && isMatch(os.top(), infix[i]) == 1) {
-					double temp2 = ns.top();
-					ns.pop();
-					double temp1 = ns.top();
-					ns.pop();
-					ns.push(getResult(temp1, temp2, os.top()));
-					os.pop();
-				}
-				os.pop();    //pop掉左括号
+		if (priority(infix[i]) == 0)continue;
+		if (priority(infix[i]) > 0) {   //+ - * / ( {
+			while (!os.empty() && priority(os.top()) != LBRACKET && priority(infix[i]) <= priority(os.top())) {
+				double temp2 = ns.top();
+				ns.pop();
+				double temp1 = ns.top();
+				ns.pop();
+				ns.push(getResult(temp1, temp2, os.top()));
+				os.pop();
 			}
+			os.push(infix[i]);
+		} else {    //处理右括号情况
+			while (!os.empty() && isMatch(os.top(), infix[i]) == 1) {
+				double temp2 = ns.top();
+				ns.pop();
+				double temp1 = ns.top();
+				ns.pop();
+				ns.push(getResult(temp1, temp2, os.top()));
+				os.pop();
+			}
+			os.pop();    //pop掉左括号
 		}
 	}
 	
@@ -134,15 +146,6 @@ double evaluateInfix(const string& infix) {
 	}
 	
 	return ns.top();
-}
-
-bool isSymbol(char c) {
-	switch (c) {
-	case '+': case '-': case '*': case '/': case '(': case ')': case '{': case '}':
-		return true;
-	default:
-		return false;
-	}
 }
 
 double getResult(double n1, double n2, char op) {
@@ -179,6 +182,9 @@ short priority(char c) {
 
 	case '}':
 		return -2;
+		
+	default:
+		return 0;   //非符号
 	}
 }
 

@@ -1,0 +1,90 @@
+1.
+(1)(2)
+	...BaseClass1 Object is created!
+	...BaseClass1 Object is created!
+	...First layer derived Object is created!
+	...BaseClass1 Object is created!
+	...First layer derived Object is created!
+	...Second layer derived Object is created!
+	...Second layer derived Object is destroyed!
+	...First layer derived Object is Destroyed!
+	...BaseClass1 Object is destroyed!
+	...First layer derived Object is Destroyed!
+	...BaseClass1 Object is destroyed!
+	...BaseClass1 Object is destroyed!
+
+(3)(4)
+	...BaseClass1 Object is created!
+	...BaseClass2 Object is created!
+	...BaseClass1 Object is created!
+	...BaseClass2 Object is created!
+	...BaseClass1 Object is created!
+	...First layer derived Object is created!
+	...BaseClass1 Object is created!
+	...BaseClass2 Object is created!
+	...BaseClass1 Object is created!
+	...First layer derived Object is created!
+	...Second layer derived Object is created!
+	...Second layer derived Object is destroyed!
+	...First layer derived Object is Destroyed!
+	...BaseClass1 Object is destroyed!
+	...BaseClass2 Object is destroyed!
+	...BaseClass1 Object is destroyed!
+	...First layer derived Object is Destroyed!
+	...BaseClass1 Object is destroyed!
+	...BaseClass2 Object is destroyed!
+	...BaseClass1 Object is destroyed!
+	...BaseClass2 Object is destroyed!
+	...BaseClass1 Object is destroyed!
+	
+2.
+(1)
+	...BaseClass31 Object is created!
+	1 2 3
+	...BaseClass32 Object is created!
+	? ? ?
+	4 5 6
+	...BaseClass32 Object is destroyed!
+	...BaseClass31 Object is destroyed!
+	
+(2)
+	...BaseClass31 Object is created!
+	88 8 9
+	...BaseClass31 Object is created!
+	5 6 7
+	...Base Object has been created!
+	...Member Object has been created! 5 6 7
+	...Derived Object is created! 88
+	...BaseClass31 Object is destroyed!
+	...BaseClass31 Object is destroyed!
+	
+3.
+(1)(2)
+	编译不通过，x是基类的private成员
+
+(3)
+	编译不通过，x是基类的private成员
+	
+(4)
+	编译不通过，x是基类的private成员
+	
+(5)
+	...MyBase f1-----!
+	...MyDerived f2-----!
+	...MyDerived f3-----!
+	...MyBase f2-----!
+	...MyDerived f2-----!
+	
+4.
+(1)(2)(3)
+
+	2
+	2
+	
+	4
+	4
+	8
+	8
+	
+	8
+	编译不通过，MyBase类没有成员函数getY()

@@ -1,3 +1,7 @@
+/**
+ *  Last modified: 2019/3/26
+ */
+
 #include <iostream>
 #include <stack>
 #include <cstdlib>
@@ -5,8 +9,6 @@
 using namespace std;
 #define LBRACKET 32767
 
-string parseToPostfix(const string&);  //Infix -> Postfix
-double parseToDouble(const string&);   //Postfix -> Double
 double evaluateInfix(const string&);    //Infix -> Double
 
 void bracketError(int = -1);    //抛出括号错误，参数为错误位置
@@ -15,154 +17,40 @@ void symbolError(int = -1); //抛出操作符错误，参数为错误位置
 double getResult(double, double, char); //计算单个运算得到的答案
 void operate(stack<double>&, char);    //将stack顶的2个元素按op运算后压入
 short priority(char);   //操作符优先级
-bool isSymbol(char);    //判断是否是操作符
 short isMatch(char,char);    //判断括号是否匹配
 
 int main() {
-	string test = "6.4-6*1.7+6/2";
-	cout << parseToPostfix(test) << endl;
-	cout << parseToDouble(parseToPostfix(test));
-}
-
-string parseToPostfix(const string& infix) {
-	string postfix;	//result
-	stack<char> s;    //operator stack
-	int size = infix.size();
-	
-	for (int i = 0; i < size; ++i) {
-		if (infix[i] == ' ')continue;
-		if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.') {
-			postfix.append(1,infix[i]);
-			if (i+1 >= size || infix[i+1] == ' ' || isSymbol(infix[i+1])) {
-				postfix.append(1,' ');
-			}
-			continue;
-		}
-		
-		if (priority(infix[i]) == 0) {	//非法字符 
-			cout << "Illegal character at " << i+1 << "." << endl; 
-			break;
-		}
-		
-		if (priority(infix[i]) > 0) {   //+ - * / ( {
-		
-			while (!s.empty() && priority(s.top()) != LBRACKET && priority(infix[i]) <= priority(s.top())) {
-				postfix.append(1, s.top());
-				postfix.append(1,' ');
-				s.pop();
-			}
-			s.push(infix[i]);
-			
-		} else {    //处理右括号情况
-		
-			while (!s.empty() && isMatch(s.top(), infix[i]) == 1) {
-				postfix.append(1, s.top());
-				postfix.append(1,' ');
-				s.pop();
-			}
-			if (s.empty() || isMatch(s.top(), infix[i]) == -1) {
-				bracketError(i+1);
-				break;
-			}
-			s.pop();    //pop掉左括号
-			
-		}
-	}   //End for
-	
-	while (!s.empty()) {
-		if (s.top() != '(' && s.top() != '{') {
-			postfix.append(1, s.top());
-			postfix.append(1,' ');
-			s.pop();
-		} else {
-			bracketError();
-			break;
-		}
+	string test = "6.1*(.23-1)+4/-2";
+	cout << "Type in any expression to evaluate:" << endl;
+	cout << "\nExample:" << endl;
+	cout << '>' << test << endl;
+	cout << '=' << evaluateInfix(test) << endl;
+	cout << endl;
+	while (cin) {
+		cout << '>';
+		getline(cin, test);
+		cout << '=' << evaluateInfix(test) << endl;
+		cout << endl;
 	}
-	
-	return postfix;
-}
-
-double parseToDouble(const string& postfix) {
-	stack<double> s;
-	int size = postfix.size();
-	
-	for (int i = 0; i < size; ++i) {
-		
-		if (postfix[i] == ' ')continue;
-		
-		if ((postfix[i] >= '0' && postfix[i] <= '9') || postfix[i] == '.') {
-			
-			//解析数字
-			double temp = 0.0;
-			--i;
-			
-			while (postfix[i+1] >= '0' && postfix[i+1] <= '9') {
-				temp *= 10;
-				temp += postfix[i+1] - '0';
-				++i;
-			}
-			
-			if (postfix[i+1] == '.') {
-				++i;
-				double base = 0.1;
-				while (postfix[i+1] >= '0' && postfix[i+1] <= '9') {
-					temp += base * (postfix[i+1] - '0');
-					base /= 10;
-					++i;
-				}
-			}
-			
-			if (postfix[i+1] != ' ' && !isSymbol(postfix[i+1])) {   //postfix中没有括号，不用考虑
-				symbolError(i+2);
-				break;
-			}
-			
-			s.push(temp);
-			continue;
-			
-		}
-		
-		if (isSymbol(postfix[i])) {	//postfix中没有括号，不用考虑
-			
-			if (s.empty()) {
-				symbolError(i+1);
-				break;
-			}
-			double temp2 = s.top();
-			s.pop();
-			
-			if (s.empty()) {
-				symbolError(i+1);
-				break;
-			}
-			double temp1 = s.top();
-			s.pop();
-			
-			s.push(getResult(temp1, temp2, postfix[i]));
-			continue;
-			
-		}
-		
-		//非法字符
-		cout << "Illegal character at " << i << "." << endl;
-		break;
-	}   //End for
-	
-	return s.top();
 }
 
 double evaluateInfix(const string& infix) {
 	stack<double> ns;   //number stack
 	stack<char> os; //operator stack
 	int size = infix.size();
-	char preItem = '';	//previous item('' = head of expression, '0' = number) 
+	char preItem = '\0';	//previous item('\0' = head of expression, '0' = number, '+' = operator)
+	unsigned int bracketCount = 0;  //check if missing rbracket
 	
 	for (int i = 0; i < size; ++i) {
 		
 		if (infix[i] == ' ')continue;
 
 		if ((infix[i] >= '0' && infix[i] <= '9') || infix[i] == '.') {
+
+			if (preItem == '0') {    //数字前不能是数字
+				symbolError(i+1);
+				return 0;
+			}
 
 			//解析数字
 			double temp = 0.0;
@@ -184,29 +72,57 @@ double evaluateInfix(const string& infix) {
 				}
 			}
 
-			if (infix[i+1] != ' ' && !isSymbol(infix[i+1])) {
-				symbolError(i+2);
-				break;
-			}
-
 			ns.push(temp);
+			preItem = '0';
 			continue;
 
 		}
 		
-		if (priority(infix[i]) == 0) {	//非法字符 
-			cout << "Illegal character at " << i+1 << "." << endl; 
-			break;
+		if (priority(infix[i]) == 0) {
+			//非法字符
+			cout << "Illegal character at " << i+1 << "." << endl;
+			return 0;
 		}
 		
-		if (priority(infix[i]) > 0) {   //+ - * / ( {
-
+		if (priority(infix[i]) == 1) {  //处理+, -
+			if (preItem != '0') {   //allow expression like -1 or --1
+				ns.push(0);
+			} else {
+				while (!os.empty() && priority(os.top()) != LBRACKET) {
+					operate(ns, os.top());
+					os.pop();
+				}
+			}
+			os.push(infix[i]);
+			preItem = '+';
+			continue;
+		}
+		
+		if (priority(infix[i]) == LBRACKET) {   //处理(, {
+			if (preItem == '0') {    //括号整体看作一个数字，前不能是数字
+				symbolError(i+1);
+				return 0;
+			}
+			os.push(infix[i]);
+			preItem = '\0';
+			++bracketCount;
+			continue;
+		}
+		
+		if (preItem != '0') {   //*, /, ), }前必须是数字
+			symbolError(i+1);
+			return 0;
+		}
+			
+		if (priority(infix[i]) > 0) {   //处理*, /
+		
 			while (!os.empty() && priority(os.top()) != LBRACKET && priority(infix[i]) <= priority(os.top())) {
 				operate(ns, os.top());
 				os.pop();
 			}
 			os.push(infix[i]);
-
+			preItem = '+';
+			
 		} else {    //处理右括号情况
 
 			while (!os.empty() && isMatch(os.top(), infix[i]) == 1) {
@@ -215,18 +131,29 @@ double evaluateInfix(const string& infix) {
 			}
 			if (os.empty() || isMatch(os.top(), infix[i]) == -1) {
 				bracketError(i+1);
-				break;
+				return 0;
 			}
 			os.pop();    //pop掉左括号
-
+			preItem = '0';  //括号整体看作一个数字
+			--bracketCount;
 		}
 	}
 	
-	while (!os.empty()) {
-		operate(ns, os.top());
-		os.pop();
+	if (preItem != '0') {   //末尾只能是数字
+		symbolError(infix.size());
+		return 0;
 	}
 	
+	if (bracketCount != 0) {
+		bracketError();
+		return 0;
+	} else {
+		while (!os.empty()) {
+			operate(ns, os.top());
+			os.pop();
+		}
+	}
+
 	return ns.top();
 }
 
@@ -264,17 +191,8 @@ double getResult(double n1, double n2, char op) {
 }
 
 void operate(stack<double>& s, char op) {
-	if (s.empty()) {
-		cout << "Illegal operator." << endl;
-		return;
-	} 
 	double temp2 = s.top();
 	s.pop();
-	
-	if (s.empty()) {
-		cout << "Illegal operator." << endl;
-		return;
-	} 
 	double temp1 = s.top();
 	s.pop();
 	s.push(getResult(temp1, temp2, op));
@@ -300,15 +218,6 @@ short priority(char c) {
 		
 	default:
 		return 0;	//非法符号 
-	}
-}
-
-bool isSymbol(char c) {
-	switch (c) {
-	case '+': case '-': case '*': case '/': case '(': case ')': case '{': case '}':
-		return true;
-	default:
-		return false;
 	}
 }
 
