@@ -1,5 +1,5 @@
 #include <iostream>
-#include "SortedQueue.h"
+#include "PriorityQueue.h"
 #include "BinTree.h"
 
 

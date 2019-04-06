@@ -7,10 +7,12 @@ struct BinNode {
 	static BinNode<T>* combine(BinNode<T>*, BinNode<T>*);
 };
 
+template <class T>
 BinNode<T>* BinNode<T>::combine(BinNode<T>* leftNode, BinNode<T>* rightNode) {
 	BinNode<T>* root = new BinNode<T>;
 	root->left = leftNode;
 	root->right = rightNode;
+	return root;
 }
 
 template <class T>
@@ -30,3 +32,4 @@ BinTree<T>::BinTree() {
 	root = new BinNode<T>;
 	root
 }
+

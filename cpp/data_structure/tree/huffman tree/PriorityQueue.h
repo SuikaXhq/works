@@ -6,15 +6,15 @@ struct ListNode {
 };
 
 template <class T>
-class SortedQueue {
+class PriorityQueue {
 	ListNode<T>* head;
 	int size;
 	ListNode<T>* findProperPosition(int);    //找到适合新结点的位置，priority越大，队列中越靠后
 	
 public:
-	SortedQueue();
-	~SortedQueue();
-	bool push(const T&, int);
+	PriorityQueue();
+	~PriorityQueue();
+	void push(const T&, int);
 	bool pop(T&);
 	bool pop();
 	T& front();
@@ -23,7 +23,7 @@ public:
 };
 
 template <class T>
-SortedQueue<T>::SortedQueue(){
+PriorityQueue<T>::PriorityQueue(){
 	head = new ListNode<T>;
 	head->next = 0;
 	head->priority = 0;
@@ -31,15 +31,15 @@ SortedQueue<T>::SortedQueue(){
 }
 
 template <class T>
-SortedQueue<T>::~SortedQueue() {
-	while (!empty()) {
+PriorityQueue<T>::~PriorityQueue() {
+	while (!empty()) {		//pop all 
 		pop();
 	}
 	delete head;
 }
 
 template <class T>
-bool SortedQueue<T>::push(const T& data, int prior) {
+void PriorityQueue<T>::push(const T& data, int prior) {
 	ListNode<T>* newNode = new ListNode<T>;
 	newNode->data = data;
 	newNode->priority = prior;
@@ -51,16 +51,16 @@ bool SortedQueue<T>::push(const T& data, int prior) {
 }
 
 template <class T>
-ListNode<T>* SortedQueue<T>::findProperPosition(int prior) {
+ListNode<T>* PriorityQueue<T>::findProperPosition(int prior) {
 	ListNode<T>* temp = head;
 	while (temp->next != 0 && temp->next->priority <= prior) {
 		temp = temp->next;
 	}
-	return temp;
+	return temp;	//返回最后一个优先级小于等于prior的结点 
 }
 
 template <class T>
-bool SortedQueue<T>::pop(T& value) {
+bool PriorityQueue<T>::pop(T& value) {
 	if (!empty()) {
 		ListNode<T>* temp = head->next;
 		value = temp->data;
@@ -74,7 +74,7 @@ bool SortedQueue<T>::pop(T& value) {
 	
 }
 template <class T>
-bool SortedQueue<T>::pop() {
+bool PriorityQueue<T>::pop() {
 	if (!empty()) {
 		ListNode<T>* temp = head->next;
 		head->next = temp->next;
@@ -86,7 +86,7 @@ bool SortedQueue<T>::pop() {
 	}
 }
 template <class T>
-T& SortedQueue<T>::front() {
+T& PriorityQueue<T>::front() {
 	if (!empty()) {
 		return head->next->data;
 	} else {
@@ -94,6 +94,6 @@ T& SortedQueue<T>::front() {
 	}
 }
 template <class T>
-bool SortedQueue<T>::empty() {
+bool PriorityQueue<T>::empty() {
 	return size==0;
 }
