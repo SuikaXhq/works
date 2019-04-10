@@ -60,13 +60,13 @@
 	
 3.
 (1)(2)
-	编译不通过，x是基类的private成员
+	编译不通过，x是基类的private成员不能被派生类调用
 
 (3)
-	编译不通过，x是基类的private成员
+	编译不通过，main中调用的所有成员变量和函数都是private成员
 	
 (4)
-	编译不通过，x是基类的private成员
+	编译不通过，x是基类的private成员，p是MyDerived3的private成员无法被MyDerived31调用,y,z, getX(),getY(),getZ()是protect成员无法被main调用。
 	
 (5)
 	...MyBase f1-----!
@@ -87,4 +87,4 @@
 	8
 	
 	8
-	编译不通过，MyBase类没有成员函数getY()
+	编译不通过，由于MyBase类没有成员函数getY()无法被a调用，同理p、d也无法调用getY(), 而b=a会造成语法逻辑错误，不能把基类对象赋值给派生类对象。
