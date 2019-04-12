@@ -30,8 +30,8 @@ void quickSort(T* arr, int start, int end) {    // arr : The array to be sorted,
 	
 	arr[left] = pivot;
 	
-	quickSort(arr, start, left-1);
-	quickSort(arr, right+1, end);
+	quickSort(arr, start, left-1);      //sort left sub-array
+	quickSort(arr, right+1, end);       //sort right sub-array
 	
 }
 
