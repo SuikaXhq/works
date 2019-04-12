@@ -271,6 +271,7 @@ classes/
 *.dev
 *.layout
 *.win
+*.gch
 
 #vscode
 launch.json
