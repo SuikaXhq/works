@@ -1,3 +1,6 @@
+#ifndef P_QUEUE_H
+#define P_QUEUE_H
+
 template <class T>
 struct ListNode {
 	int priority;
@@ -18,9 +21,13 @@ public:
 	bool pop(T&);
 	bool pop();
 	T& front();
+	int getFrontPriority();    //return priority of front element
 	bool empty();   //return true if empty
 	
 };
+
+
+
 
 template <class T>
 PriorityQueue<T>::PriorityQueue(){
@@ -38,6 +45,15 @@ PriorityQueue<T>::~PriorityQueue() {
 	delete head;
 }
 
+
+
+
+
+
+
+
+
+
 template <class T>
 void PriorityQueue<T>::push(const T& data, int prior) {
 	ListNode<T>* newNode = new ListNode<T>;
@@ -50,6 +66,8 @@ void PriorityQueue<T>::push(const T& data, int prior) {
 	++size;
 }
 
+
+
 template <class T>
 ListNode<T>* PriorityQueue<T>::findProperPosition(int prior) {
 	ListNode<T>* temp = head;
@@ -58,6 +76,15 @@ ListNode<T>* PriorityQueue<T>::findProperPosition(int prior) {
 	}
 	return temp;	//返回最后一个优先级小于等于prior的结点 
 }
+
+
+
+
+
+
+
+
+
 
 template <class T>
 bool PriorityQueue<T>::pop(T& value) {
@@ -93,7 +120,21 @@ T& PriorityQueue<T>::front() {
 		throw "The queue is empty.";
 	}
 }
+
+
+
+template <class T>
+int PriorityQueue<T>::getFrontPriority() {
+	return head->next->priority;
+}
+
+
+
+
 template <class T>
 bool PriorityQueue<T>::empty() {
 	return size==0;
 }
+
+
+#endif
