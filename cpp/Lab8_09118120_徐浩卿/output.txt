@@ -1,0 +1,8 @@
+Number of 1 responses: 3
+Number of 2 responses: 3
+Number of 3 responses: 2
+Number of 5 responses: 1
+Number of 6 responses: 2
+Number of 8 responses: 2
+Number of 9 responses: 1
+Number of 10 responses: 1
